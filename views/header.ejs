@@ -1,0 +1,87 @@
+<meta charset="UTF-8">
+<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/superhero/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script>
+	function generateCodeVerifier() {
+		return generateRandomString(128)
+	}
+
+	function generateRandomString(length) {
+		let text = "";
+		const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+		for (let i = 0; i < length; i++) {
+			text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		return text;
+	}
+
+	function generatePKCECodes() {
+		let codeVerifier = generateCodeVerifier();
+		sessionStorage.setItem('code_verifier', codeVerifier);
+		sessionStorage.setItem('code_challenge', base64URL(CryptoJS.SHA256(codeVerifier)))
+	}
+
+	function base64URL(string) {
+		return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
+	}
+
+	function parseJwt(token) {
+		let base64Url = token.split('.')[1];
+		let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+		let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+			return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+		}).join(''));
+
+		return JSON.parse(jsonPayload);
+	};
+
+	function renderTokenData (token){
+		const idTokenDecoded = parseJwt(token);
+		const idTokenEncNode = document.createTextNode(token);
+		const idTokenDecNode = document.createTextNode(idTokenDecoded);
+		let idDiv = document.getElementById('id-token');
+		let idDivDec = document.getElementById('id-token-decoded');
+		idDiv.appendChild(idTokenEncNode);
+		
+		let claimNode, claimTitleNode, claimTitleText, claimDataNode, claimDataText;
+
+		for(claim in idTokenDecoded) {
+			claimNode = document.createElement('div');
+			claimNode.classList.add('claim');
+
+			claimTitleNode = document.createElement('span');
+			claimTitleNode.classList.add('claim-title');
+			claimTitleText = document.createTextNode(claim);
+			claimTitleNode.appendChild(claimTitleText);
+
+			claimDataNode = document.createElement('span');
+			claimDataNode.classList.add('claim-data');
+			claimDataText = document.createTextNode(idTokenDecoded[claim]);
+			claimDataNode.appendChild(claimDataText);
+			
+			claimNode.appendChild(claimTitleNode);
+			claimNode.appendChild(claimDataNode);
+			idDivDec.appendChild(claimNode);
+		}
+	}
+
+	function oktaLogout() {
+		let data = new FormData();
+
+		let xhr = new XMLHttpRequest();
+		xhr.withCredentials = true;
+
+		xhr.addEventListener("readystatechange", function() {
+		  if(this.readyState === 4) {
+		    console.log(this.responseText);
+		  }
+		});
+
+		xhr.open("DELETE", "https://iamciam.okta.com/api/v1/sessions/me", false);
+		xhr.setRequestHeader("Accept", "application/json");
+		xhr.setRequestHeader("Content-Type", "application/json");
+		xhr.send(data);
+		
+		window.location.href = "/";
+	}
+</script>

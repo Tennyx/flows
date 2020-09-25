@@ -1,0 +1,124 @@
+body {
+	background: #007DC1;
+}
+
+a {
+	color: white;
+}
+
+a:hover {
+	color: #46B3E9;
+}
+
+a:link {
+	outline : none;
+}
+
+input {
+	padding: 10px;
+}
+
+.container {
+	width: 80%;
+	margin: 20px auto 20px auto;
+	text-align: center;
+}
+
+#header-wrapper {
+	text-align: center;
+	width: 100%;
+	margin: 20px auto 20px auto;
+}
+
+#header-image {
+	width: 20%;
+	margin-bottom: 10px;
+}
+
+.pad-link {
+	padding: 50px;
+}
+
+.card {
+	background:rgba(2,2,2,0.2);
+	padding: 50px;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+	width: 100%;
+	word-wrap: break-word;
+	color: #46B3E9;
+}
+
+#id-token-decoded {
+	padding: 25px;
+}
+
+.claim {
+	display: grid;
+	width: 100%;
+	grid-template-areas: 'title data';
+	grid-template-columns: 50%;
+}
+
+.claim-title {
+	grid-area: 'title';
+	text-align: right;
+	color: #46B3E9;
+	margin: 5px;
+	word-wrap: break-word;
+}
+
+.claim-data {
+	grid-area: 'data';
+	text-align: left;
+	margin: 5px;
+	width: 50%;
+	word-wrap: break-word;
+	color: white;
+}
+
+.data-title {
+	margin-top: 50px;
+}
+
+.footer-a {
+	margin: 50px;
+	font-size: 15px;
+}
+
+.flow-wrapper {
+	margin: 20px auto 0px auto;
+	width: 75%;
+	position: relative;
+}
+
+.flow-info {
+	margin: 0px auto 20px auto;
+	width: 70%;
+	word-wrap: break-word;
+	background: #222222;
+	padding: 25px;
+}
+
+#form-submit {
+	outline: none;
+	border: 0;
+	margin-top: 10px;
+	width: 200px;
+	background: #222222;
+	color: white;
+}
+
+#error-field {
+	color: orange;
+}
+
+.arrow-down {
+	width: 0; 
+	height: 0; 
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-top: 8px solid #dddddd;
+	position: absolute;
+	right: 20;
+	bottom: 10;
+}

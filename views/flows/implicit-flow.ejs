@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('../header') -%>
+	<title>Implicit Flow</title>
+	<script>
+		/*
+		Okta suggests not using the implicit flow. It is
+		demonstrated here. The main diffence being that the idToken is
+		pulled directly from the URL, which is less secure.
+		*/
+		let idToken = (window.location.hash).split('&')[0].split('=')[1];
+
+		window.addEventListener('load', function () {
+			// Below function found in header.ejs
+			renderTokenData(idToken);
+		});
+	</script>
+</head>
+
+	<body>
+		<div class="container">
+			<h2>Welcome to the Implicit Flow!</h2>
+			<h4 class="data-title">Your ID token is:</h4>
+			<div class="card" id="id-token"></div>
+			<h4 class="data-title">Decoded:</h4>
+			<div class="card" id="id-token-decoded"></div>
+		</div>
+		<%- include('../footer') -%>
+	</body>
+</html>

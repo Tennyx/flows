@@ -1,0 +1,120 @@
+<%- include('header') -%>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+	<script type="text/javascript">
+		//////// PKCE Related Code ////////
+		
+		/*
+		Below function found in header.ejs. It generates a code challenge
+		and code verifier, stores them in session storage in the event of
+		PKCE flow initiation.
+		*/
+
+		generatePKCECodes();
+
+		/*
+		Because of the nature of PKCE code generation, below href is created
+		dynamically with the code challenge embedded from session storage, 
+		then inserted into pkce-flow-init anchor.
+		*/
+
+		let href = 
+			`<%= authServerDefault %>/authorize
+			?client_id=<%= pkceClientId %>
+			&response_type=code
+			&response_mode=query
+			&scope=openid
+			&redirect_uri=http://localhost:8080/pkce-flow
+			&state=PKCE
+			&nonce=nonceTest
+			&code_challenge_method=S256
+			&code_challenge=${sessionStorage.getItem('code_challenge')}`
+
+
+		//////// Resource Owner Related Code ////////
+		function toggle(divId) {
+			let toggleElement = document.getElementById(divId);
+			if (toggleElement.style.display === 'none') {
+				toggleElement.style.display = 'block';
+			}
+			else {
+				toggleElement.style.display = 'none';
+			}
+		}
+
+
+		//////// PKCE & Resource Owner Related Code that needs to fire after render ////////
+		window.addEventListener('load', function () {
+			
+			// Insert dynamic PKCE href into pkce-flow-init anchor
+			let pckeFloAnchor = document.getElementById('pkce-flow-init');
+			pckeFloAnchor.href = href;
+
+			// Handle errors in credentials for Resource Owner flow.
+			const error = "<%= error %>";
+
+			if(error){
+				let errorFormWrapper = document.getElementById('form-wrapper');
+				errorFormWrapper.style.display = 'block';
+				let errorNode = document.getElementById('error-field');
+				let errorText = document.createTextNode(error);
+				errorNode.appendChild(errorText);
+			}
+		});
+
+
+		/////// EJS rendered template variables can be found and changed in server.js. \\\\\\\
+
+	</script>
+</head>
+<body>
+	<div id="header-wrapper">
+		<img id="header-image" src="/images/FLOWS.png">
+		<p>Various OIDC and OAuth Flows without SDKs. Okta as IDP.</p>
+	</div>
+	<div class="container">
+		<div class="card flow-wrapper">
+			<a href="<%= authServerDefault %>/authorize
+			?client_id=<%= impClientId %>
+			&response_type=id_token
+			&response_mode=fragment
+			&scope=openid profile
+			&redirect_uri=http://localhost:8080/implicit-flow
+			&state=stateTest
+			&nonce=nonceTest">Implicit Flow</a>
+		</div>
+
+		<div class="card flow-wrapper">
+			<a href="<%= authServerDefault %>/authorize
+			?client_id=<%= acClientId %>
+			&response_type=code
+			&scope=openid profile
+			&redirect_uri=http://localhost:8080/auth-flow
+			&state=stateTest
+			&nonce=nonceTest">Authorization Flow</a>
+		</div>
+
+		<div class="card flow-wrapper">
+			<a id="pkce-flow-init">Authorization Flow w/ PKCE</a>
+		</div>
+
+		<div class="card flow-wrapper">
+			<a href="/client-credentials-flow">Client Credentials Flow</a>
+		</div>
+
+		<div class="card flow-wrapper">
+			<a onclick="toggle('form-wrapper')">Resource Owner Flow</a>
+		</div>
+
+		<div id="form-wrapper" style="display:none">
+			<label>For Resource Flow, Enter User Credentials:</label>
+			<form action="/resource-owner-flow" method="post">
+				<input id="email-field" type="text" name="email_field" placeholder="email">
+				<input id="password-field" type="password" name="password_field" placeholder="password">
+				<br>
+				<input id="form-submit" type="submit" value="Submit">
+			</form>
+			<div id="error-field"></div>
+		</div>
+	</div>
+</body>
+</html>

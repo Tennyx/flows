@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('../header') -%>
+	<title>Auth Flow</title>
+	<script>
+		// ID token passed from backend server
+		let idToken = "<%= idToken %>";
+
+		window.addEventListener('load', function () {
+			// Below function found in header.ejs
+			renderTokenData(idToken);
+		});
+	</script>
+</head>
+
+	<body>
+		<div class="container">
+			<h2>Welcome to the Auth Flow!</h2>
+			<h4 class="data-title">Your ID token is:</h4>
+			<div class="card" id="id-token"></div>
+			<h4 class="data-title">Decoded:</h4>
+			<div class="card" id="id-token-decoded"></div>
+		</div>
+		<%- include('../footer') -%>
+	</body>
+</html>

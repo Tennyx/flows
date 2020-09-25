@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('../header') -%>
+	<title>PKCE Flow</title>
+	<script>
+		const authCode = (window.location.search).split('&')[0].split('=')[1];
+		const codeVerifier = sessionStorage.getItem('code_verifier');
+
+		var myHeaders = new Headers();
+		myHeaders.append("Accept", "application/json");
+		myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+		var urlencoded = new URLSearchParams();
+		urlencoded.append("grant_type", "authorization_code");
+		urlencoded.append("client_id", "0oazfalj9Y5S3WjJs4x6");
+		urlencoded.append("redirect_uri", "http://localhost:8080/pkce-flow");
+		urlencoded.append("code", authCode);
+		urlencoded.append("code_verifier", codeVerifier);
+
+		var requestOptions = {
+			method: 'POST',
+			headers: myHeaders,
+			body: urlencoded,
+			redirect: 'follow'
+		};
+
+		fetch("https://auth.iamciam.dev/oauth2/v1/token", requestOptions)
+			.then(response => response.json())
+			.then(result => {
+				console.log(result);
+				let idToken = result.id_token;
+				// Below function found in head.ejs
+				renderTokenData(idToken);
+			})
+			.catch(error => console.log('error', error));
+	</script>
+</head>
+<body>
+	<div class="container">
+		<h2>Welcome to the PKCE Flow!</h2>
+		<h4 class="data-title">Your ID token is:</h4>
+		<div class="card" id="id-token"></div>
+		<h4 class="data-title">Decoded:</h4>
+		<div class="card" id="id-token-decoded"></div>
+	</div>
+	<%- include('../footer') -%>
+</body>
+</html>
