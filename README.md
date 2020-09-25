@@ -7,7 +7,7 @@ Various OIDC and OAuth Flows without SDKs. Okta as IDP.
 * Locate `customVars.js` and replace all the variables with your personal Okta Org data.
 * Change `customVars.js` filename to `localVars.js`.
 * In terminal, run `node server.js`.
-* Navigate to `http://localhost:8080` to start using the app.
+* In a broswer, navigate to `http://localhost:8080` to start using the app.
 
 
 
