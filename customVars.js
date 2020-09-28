@@ -23,7 +23,7 @@ const roClientId = '{ APP CLIENT ID }';
 const roClientSecret = '{ APP CLIENT SECRET }';
 const roHeader = Buffer.from(`${roClientId}:${roClientSecret}`).toString('base64');
 
-// Client ID, Client Secret and Header for your Okta Native App, Resource Owner Flow.
+// Client ID, Client Secret and Header for your Okta OAuth Service App, Client Credentials Flow.
 const customScope = '{ CUSTOM SCOPE }';
 const ccClientId = '{ APP CLIENT ID }';						
 const ccClientSecret = '{ APP CLIENT SECRET }';
